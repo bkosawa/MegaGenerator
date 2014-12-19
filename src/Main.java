@@ -11,7 +11,7 @@ import java.util.Set;
  */
 public class Main {
 
-    private static final int MAX_GAMES = 100;
+    private static final int MAX_GAMES = 40;
 
     public static void main(String [ ] args)
     {
@@ -36,11 +36,13 @@ public class Main {
 
         NumberGenerator<Integer> dug = new DiscreteUniformGenerator(1,60, rnd);
         while (games.size() < NUM_GAMES) {
-            int[] numbers = new int[Game.MAX_NUM];
-            for(int i = 0; i < numbers.length; i++){
-                numbers[i] = dug.nextValue();
+            //int[] numbers = new int[Game.MAX_NUM];
+            Set<Integer> numbers = new HashSet<Integer>();
+            while(numbers.size() < Game.MAX_NUM){
+                numbers.add(dug.nextValue());
             }
-            Game game = Game.getInstance(numbers);
+            Integer[] numbersArray = numbers.toArray(new Integer[6]);
+            Game game = Game.getInstance(numbersArray);
             if(game != null) {
                 games.add(game);
             }

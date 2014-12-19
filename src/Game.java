@@ -8,14 +8,14 @@ import java.util.Arrays;
 public class Game {
     public static final int MAX_NUM = 6;
 
-    int[] numbers = new int[MAX_NUM];
+    Integer[] numbers = new Integer[MAX_NUM];
 
-    public static Game getInstance(int[] numbers){
+    public static Game getInstance(Integer[] numbers){
         Game game = isNumbersUnique(numbers)? new Game(numbers): null;
         return game;
     }
 
-    private static boolean isNumbersUnique(int[] numbers) {
+    private static boolean isNumbersUnique(Integer[] numbers) {
         for(int i=0;i < numbers.length;i++){
             for(int j=0;j < numbers.length-i;j++){
                 if(j!=i
@@ -27,7 +27,7 @@ public class Game {
         return true;
     }
 
-    private Game(int[] numbers) {
+    private Game(Integer[] numbers) {
         if(numbers.length != 6){
             throw new RuntimeException("Nao pode ter menos de 6");
         }
@@ -40,7 +40,7 @@ public class Game {
         other = obj instanceof Game? (Game) obj: null;
         if(other == null)
             return false;
-        int[] otherArray = other.getNumbers();
+        Integer[] otherArray = other.getNumbers();
         if (otherArray.length != numbers.length)
             return false;
 
@@ -67,11 +67,11 @@ public class Game {
         }
     }
 
-    public int[] getNumbers() {
+    public Integer[] getNumbers() {
         return numbers;
     }
 
-    public void setNumbers(final int[] numbers) {
+    public void setNumbers(final Integer[] numbers) {
         if(numbers.length < MAX_NUM){
             throw new RuntimeException("Nao pode ter menos de 6");
         }
