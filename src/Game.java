@@ -10,7 +10,24 @@ public class Game {
 
     int[] numbers = new int[MAX_NUM];
 
-    public Game(int[] numbers) {
+    public static Game getInstance(int[] numbers){
+        Game game = isNumbersUnique(numbers)? new Game(numbers): null;
+        return game;
+    }
+
+    private static boolean isNumbersUnique(int[] numbers) {
+        for(int i=0;i < numbers.length;i++){
+            for(int j=0;j < numbers.length-i;j++){
+                if(j!=i
+                    && numbers[i] == numbers[j]){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private Game(int[] numbers) {
         if(numbers.length != 6){
             throw new RuntimeException("Nao pode ter menos de 6");
         }
