@@ -2,9 +2,7 @@ import org.uncommons.maths.number.NumberGenerator;
 import org.uncommons.maths.random.*;
 
 
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by bruno.costa on 18/12/14.
@@ -41,7 +39,8 @@ public class Main {
             while(numbers.size() < Game.MAX_NUM){
                 numbers.add(dug.nextValue());
             }
-            Integer[] numbersArray = numbers.toArray(new Integer[6]);
+
+            Integer[] numbersArray = asSortedList(numbers).toArray(new Integer[6]);
             Game game = Game.getInstance(numbersArray);
             if(game != null) {
                 games.add(game);
@@ -53,6 +52,14 @@ public class Main {
         }
 
     }
+
+    public static
+    <T extends Comparable<? super T>> List<T> asSortedList(Collection<T> c) {
+        List<T> list = new ArrayList<T>(c);
+        java.util.Collections.sort(list);
+        return list;
+    }
+
 
 
 }

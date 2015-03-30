@@ -48,7 +48,7 @@ public class Game {
         for(int i = 0 ; i < numbers.length;i++){
             boolean find = false;
             for(int j = 0; j < otherArray.length; j++) {
-                if (numbers[i] == otherArray[j]) {
+                if (numbers[i].equals(otherArray[j])) {
                     find = true;
                     break;
                 }
