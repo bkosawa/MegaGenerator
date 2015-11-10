@@ -11,6 +11,8 @@ import java.util.*;
  */
 public class LotteryQuickPick {
 
+    private static final int MAX_ITERATION = 1000000;
+
     private int minNumber = 1;
     private int maxNumber = 60;
     private int numberPerGame = 6;
@@ -35,8 +37,11 @@ public class LotteryQuickPick {
 //        rnd = new JavaRNG();
 
         NumberGenerator<Integer> dug = new DiscreteUniformGenerator(minNumber, maxNumber, rnd);
-        while (games.size() < numOfGames) {
-            //int[] numbers = new int[br.com.kosawalabs.Game.MAX_NUM];
+        int iterations = 0;
+        int generated = 0;
+        int discarded = 0;
+
+        while (games.size() < numOfGames || MAX_ITERATION < iterations) {
             Set<Integer> numbers = new HashSet<Integer>();
             while(numbers.size() < numberPerGame){
                 numbers.add(dug.nextValue());
@@ -44,15 +49,32 @@ public class LotteryQuickPick {
 
             Integer[] numbersArray = asSortedList(numbers).toArray(new Integer[numberPerGame]);
 
+
             Game.Builder builder = new Game.Builder();
             Game game = builder
                         .setMinSize(numberPerGame)
                         .setNumberList(numbersArray)
                         .build();
-            if(game != null) {
-                games.add(game);
+
+            boolean hasSame = false;
+            for(Game g : games ) {
+                if( g.equals(game) ){
+                    hasSame = true;
+                }
             }
+
+            if (game != null && !hasSame) {
+                games.add(game);
+                generated++;
+            } else {
+                discarded++;
+            }
+
+            iterations++;
         }
+
+        System.out.println("Generated: " + generated + " - Discarded: " + discarded);
+        System.out.println("Number of iterations: " + iterations);
 
         return games;
     }

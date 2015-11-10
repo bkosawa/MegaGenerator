@@ -7,6 +7,7 @@ import java.text.NumberFormat;
  * Created by bruno.costa on 18/12/14.
  */
 public class Game {
+
     Integer[] numbers;
 
     public static Game getInstance(Integer[] numbers){
