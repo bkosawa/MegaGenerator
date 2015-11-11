@@ -11,7 +11,9 @@ import java.util.*;
  */
 public class LotteryQuickPick {
 
-    private static final int MAX_ITERATION = 1000000;
+    /** C(60,6) = n!/((n-p)!*p!)
+     * C(60,6) = 60!/((60-6)!*6!) = 50063860 **/
+    private static final int MAX_ITERATION = 50063860;
 
     private int minNumber = 1;
     private int maxNumber = 60;
