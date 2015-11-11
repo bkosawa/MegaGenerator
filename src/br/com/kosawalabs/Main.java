@@ -12,17 +12,15 @@ public class Main {
 
     public static void main(String [ ] args)
     {
-        int numOfGames = MAX_GAMES;
-        int minNumber = 1;
-        int maxNumber = 60;
-        int numberPerGame = 6;
+
+        Options opt = new Options();
 
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case "-g":
                     if(hasNextArgs(args, i)) {
                         try {
-                            numOfGames = Integer.valueOf(args[i + 1]);
+                            opt.setNumOfGames(Integer.valueOf(args[i + 1]));
                             i++;
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
@@ -33,7 +31,7 @@ public class Main {
                 case "-m":
                     if(hasNextArgs(args, i)) {
                         try {
-                            minNumber = Integer.valueOf(args[i + 1]);
+                            opt.setMinNumber(Integer.valueOf(args[i + 1]));
                             i++;
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
@@ -44,7 +42,7 @@ public class Main {
                 case "-M":
                     if(hasNextArgs(args, i)) {
                         try {
-                            maxNumber = Integer.valueOf(args[i + 1]);
+                            opt.setMaxNumber(Integer.valueOf(args[i + 1]));
                             i++;
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
@@ -55,7 +53,7 @@ public class Main {
                 case "-p":
                     if(hasNextArgs(args, i)) {
                         try {
-                            numberPerGame = Integer.valueOf(args[i + 1]);
+                            opt.setNumberPerGame(Integer.valueOf(args[i + 1]));
                             i++;
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
@@ -70,15 +68,63 @@ public class Main {
         }
 
         LotteryQuickPick quickPick = new
-                LotteryQuickPick(minNumber, maxNumber, numberPerGame);
+                LotteryQuickPick(opt.getMinNumber(),
+                    opt.getMaxNumber(),
+                    opt.getNumberPerGame());
 //            LotteryQuickPick();
 
-        Set<Game> games = quickPick.run(numOfGames);
+        Set<Game> games = quickPick.run(opt.getNumOfGames());
 
         for(Game g:games){
             System.out.println(g);
         }
 
+    }
+
+    private static class Options{
+        private int numOfGames = MAX_GAMES;
+        private int minNumber = 1;
+        private int maxNumber = 60;
+        private int numberPerGame = 6;
+
+        public Options() {
+            numOfGames = MAX_GAMES;
+            minNumber = 1;
+            maxNumber = 60;
+            numberPerGame = 6;
+        }
+
+        public int getNumOfGames() {
+            return numOfGames;
+        }
+
+        public void setNumOfGames(int numOfGames) {
+            this.numOfGames = numOfGames;
+        }
+
+        public int getMinNumber() {
+            return minNumber;
+        }
+
+        public void setMinNumber(int minNumber) {
+            this.minNumber = minNumber;
+        }
+
+        public int getMaxNumber() {
+            return maxNumber;
+        }
+
+        public void setMaxNumber(int maxNumber) {
+            this.maxNumber = maxNumber;
+        }
+
+        public int getNumberPerGame() {
+            return numberPerGame;
+        }
+
+        public void setNumberPerGame(int numberPerGame) {
+            this.numberPerGame = numberPerGame;
+        }
     }
 
     private static boolean hasNextArgs(String[] args, int i) {
