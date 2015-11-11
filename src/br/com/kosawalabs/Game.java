@@ -1,14 +1,13 @@
+package br.com.kosawalabs;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Arrays;
 
 /**
  * Created by bruno.costa on 18/12/14.
  */
 public class Game {
-    public static final int MAX_NUM = 6;
-
-    Integer[] numbers = new Integer[MAX_NUM];
+    Integer[] numbers;
 
     public static Game getInstance(Integer[] numbers){
         Game game = isNumbersUnique(numbers)? new Game(numbers): null;
@@ -28,9 +27,6 @@ public class Game {
     }
 
     private Game(Integer[] numbers) {
-        if(numbers.length != 6){
-            throw new RuntimeException("Nao pode ter menos de 6");
-        }
         this.numbers = numbers;
     }
 
@@ -71,13 +67,6 @@ public class Game {
         return numbers;
     }
 
-    public void setNumbers(final Integer[] numbers) {
-        if(numbers.length < MAX_NUM){
-            throw new RuntimeException("Nao pode ter menos de 6");
-        }
-        this.numbers = numbers;
-    }
-
     @Override
     public String toString() {
         StringBuilder  builder = new StringBuilder();
@@ -89,5 +78,37 @@ public class Game {
         builder.append(formatter.format(numbers[numbers.length -1]));
 
         return builder.toString();
+    }
+
+    public static class Builder{
+
+        private int minSize;
+
+        private Integer[] numbers;
+
+        public Builder() {
+        }
+
+        public Builder setMinSize(int minSize){
+            this.minSize = minSize;
+            return this;
+        }
+
+        public Builder setNumberList(Integer[] numbers){
+            this.numbers = numbers;
+            return this;
+        }
+
+        public Game build() {
+            if(numbers == null) {
+                throw new RuntimeException("Number list is not set!");
+            }
+
+            if(numbers.length < minSize){
+                throw new RuntimeException("Number list cannot have less than " + minSize);
+            }
+
+            return isNumbersUnique(numbers)? new Game(numbers): null;
+        }
     }
 }
