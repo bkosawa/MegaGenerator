@@ -15,20 +15,28 @@ public class LotteryQuickPick {
      * C(60,6) = 60!/((60-6)!*6!) = 50063860 **/
     private static final int MAX_ITERATION = 50063860;
 
-    private int minNumber = 1;
-    private int maxNumber = 60;
-    private int numberPerGame = 6;
+    private int mMinNumber = 1;
+    private int mMaxNumber = 60;
+    private int mNumberPerGame = 6;
 
     public LotteryQuickPick() {
     }
 
     public LotteryQuickPick(int minNumber, int maxNumber, int numberPerGame) {
-        this.minNumber = minNumber;
-        this.maxNumber = maxNumber;
-        this.numberPerGame = numberPerGame;
+        this.mMinNumber = minNumber;
+        this.mMaxNumber = maxNumber;
+        this.mNumberPerGame = numberPerGame;
     }
 
     public Set<Game> run(int numOfGames){
+        return run(numOfGames, this.mNumberPerGame);
+    }
+
+    public Set<Game> run(int numOfGames, int numberPerGame){
+        return run(new LotteryOption(numOfGames, numberPerGame));
+    }
+
+    public Set<Game> run(LotteryOption... options){
         Set<Game> games = new HashSet<Game>();
 
         Random rnd;
@@ -38,41 +46,49 @@ public class LotteryQuickPick {
 //        rnd = new AESCounterRNG();
 //        rnd = new JavaRNG();
 
-        NumberGenerator<Integer> dug = new DiscreteUniformGenerator(minNumber, maxNumber, rnd);
+        NumberGenerator<Integer> dug = new DiscreteUniformGenerator(mMinNumber, mMaxNumber, rnd);
         int iterations = 0;
         int generated = 0;
         int discarded = 0;
+        int diffGamesCount = 0;
 
-        while (games.size() < numOfGames || MAX_ITERATION < iterations) {
-            Set<Integer> numbers = new HashSet<Integer>();
-            while(numbers.size() < numberPerGame){
-                numbers.add(dug.nextValue());
-            }
+        while (diffGamesCount < options.length ) {
 
-            Integer[] numbersArray = asSortedList(numbers).toArray(new Integer[numberPerGame]);
+            int gamesCount = 0;
+            while (gamesCount < options[diffGamesCount].getNumOfGames() || MAX_ITERATION < iterations) {
+                Set<Integer> numbers = new HashSet<Integer>();
+                while (numbers.size() < options[diffGamesCount].getNumberPerGame()) {
+                    numbers.add(dug.nextValue());
+                }
+
+                Integer[] numbersArray = asSortedList(numbers).toArray(new Integer[options[diffGamesCount].getNumberPerGame()]);
 
 
-            Game.Builder builder = new Game.Builder();
-            Game game = builder
-                        .setMinSize(numberPerGame)
+                Game.Builder builder = new Game.Builder();
+                Game game = builder
+                        .setMinSize(options[diffGamesCount].getNumberPerGame())
                         .setNumberList(numbersArray)
                         .build();
 
-            boolean hasSame = false;
-            for(Game g : games ) {
-                if( g.equals(game) ){
-                    hasSame = true;
+                boolean hasSame = false;
+                for (Game g : games) {
+                    if (g.equals(game)) {
+                        hasSame = true;
+                    }
                 }
+
+                if (game != null && !hasSame) {
+                    games.add(game);
+                    generated++;
+                } else {
+                    discarded++;
+                }
+
+                iterations++;
+                gamesCount++;
             }
 
-            if (game != null && !hasSame) {
-                games.add(game);
-                generated++;
-            } else {
-                discarded++;
-            }
-
-            iterations++;
+            diffGamesCount++;
         }
 
         System.out.println("Generated: " + generated + " - Discarded: " + discarded);

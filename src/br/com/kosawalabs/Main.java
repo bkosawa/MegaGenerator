@@ -73,7 +73,12 @@ public class Main {
                     opt.getNumberPerGame());
 //            LotteryQuickPick();
 
-        Set<Game> games = quickPick.run(opt.getNumOfGames());
+        Set<Game> games = quickPick.run(new LotteryOption(opt.getNumOfGames(), opt.getNumberPerGame()));
+//        Set<Game> games = quickPick.run(
+//                new LotteryOption(24, 6)
+//                , new LotteryOption(4, 7)
+//                , new LotteryOption(1, 8)
+//        );
 
         for(Game g:games){
             System.out.println(g);
