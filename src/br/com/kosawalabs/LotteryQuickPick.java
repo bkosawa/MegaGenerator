@@ -17,19 +17,13 @@ public class LotteryQuickPick {
 
     private int mMinNumber = 1;
     private int mMaxNumber = 60;
-    private int mNumberPerGame = 6;
 
     public LotteryQuickPick() {
     }
 
-    public LotteryQuickPick(int minNumber, int maxNumber, int numberPerGame) {
+    public LotteryQuickPick(int minNumber, int maxNumber) {
         this.mMinNumber = minNumber;
         this.mMaxNumber = maxNumber;
-        this.mNumberPerGame = numberPerGame;
-    }
-
-    public Set<Game> run(int numOfGames){
-        return run(numOfGames, this.mNumberPerGame);
     }
 
     public Set<Game> run(int numOfGames, int numberPerGame){

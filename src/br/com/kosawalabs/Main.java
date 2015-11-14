@@ -69,11 +69,10 @@ public class Main {
 
         LotteryQuickPick quickPick = new
                 LotteryQuickPick(opt.getMinNumber(),
-                    opt.getMaxNumber(),
-                    opt.getNumberPerGame());
-//            LotteryQuickPick();
+                    opt.getMaxNumber());
 
-        Set<Game> games = quickPick.run(new LotteryOption(opt.getNumOfGames(), opt.getNumberPerGame()));
+        Set<Game> games = quickPick.run(opt.getNumOfGames(), opt.getNumberPerGame());
+//        Set<Game> games = quickPick.run(new LotteryOption(opt.getNumOfGames(), opt.getNumberPerGame()));
 //        Set<Game> games = quickPick.run(
 //                new LotteryOption(24, 6)
 //                , new LotteryOption(4, 7)
