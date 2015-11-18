@@ -74,7 +74,7 @@ public class Game {
         NumberFormat formatter = new DecimalFormat("00");
 
         for(int i =0; i < numbers.length - 1; i++){
-            builder.append(formatter.format(numbers[i])).append("-");
+            builder.append(formatter.format(numbers[i])).append("\t");
         }
         builder.append(formatter.format(numbers[numbers.length -1]));
 

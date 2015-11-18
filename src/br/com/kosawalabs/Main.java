@@ -74,9 +74,8 @@ public class Main {
         Set<Game> games = quickPick.run(opt.getNumOfGames(), opt.getNumberPerGame());
 //        Set<Game> games = quickPick.run(new LotteryOption(opt.getNumOfGames(), opt.getNumberPerGame()));
 //        Set<Game> games = quickPick.run(
-//                new LotteryOption(24, 6)
-//                , new LotteryOption(4, 7)
-//                , new LotteryOption(1, 8)
+//                new LotteryOption(10, 6)
+//              , new LotteryOption(8, 7)
 //        );
 
         for(Game g:games){

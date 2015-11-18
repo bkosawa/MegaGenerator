@@ -1,7 +1,5 @@
 package br.com.kosawalabs;
 
-import org.uncommons.maths.number.NumberGenerator;
-import org.uncommons.maths.random.DiscreteUniformGenerator;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 
 import java.util.*;
@@ -15,15 +13,37 @@ public class LotteryQuickPick {
      * C(60,6) = 60!/((60-6)!*6!) = 50063860 **/
     private static final int MAX_ITERATION = 50063860;
 
-    private int mMinNumber = 1;
-    private int mMaxNumber = 60;
+    private List<Integer> numbersSet;
 
     public LotteryQuickPick() {
+        int minNumber = 1;
+        int maxNumber = 60;
+        int i = minNumber;
+        numbersSet = new ArrayList<>();
+        while (i <= maxNumber) {
+            numbersSet.add(i);
+            i++;
+        }
     }
 
     public LotteryQuickPick(int minNumber, int maxNumber) {
-        this.mMinNumber = minNumber;
-        this.mMaxNumber = maxNumber;
+        int i = minNumber;
+        numbersSet = new ArrayList<>();
+        while (i <= maxNumber) {
+            numbersSet.add(i);
+            i++;
+        }
+    }
+
+    public LotteryQuickPick(List<Integer> selectedNumbers) {
+        if(selectedNumbers == null || selectedNumbers.size() == 0){
+            throw new IllegalArgumentException("You passed a invalid set of numbers.");
+        }
+        numbersSet = selectedNumbers;
+    }
+
+    public Set<Game> run(){
+        return run(1, 6);
     }
 
     public Set<Game> run(int numOfGames, int numberPerGame){
@@ -40,27 +60,33 @@ public class LotteryQuickPick {
 //        rnd = new AESCounterRNG();
 //        rnd = new JavaRNG();
 
-        NumberGenerator<Integer> dug = new DiscreteUniformGenerator(mMinNumber, mMaxNumber, rnd);
         int iterations = 0;
         int generated = 0;
         int discarded = 0;
         int diffGamesCount = 0;
 
         while (diffGamesCount < options.length ) {
-
+            int numberOfGames = options[diffGamesCount].getNumOfGames();
+            int numberPerGame = options[diffGamesCount].getNumberPerGame();
             int gamesCount = 0;
-            while (gamesCount < options[diffGamesCount].getNumOfGames() || MAX_ITERATION < iterations) {
+            while (gamesCount < numberOfGames || MAX_ITERATION < iterations) {
                 Set<Integer> numbers = new HashSet<Integer>();
-                while (numbers.size() < options[diffGamesCount].getNumberPerGame()) {
-                    numbers.add(dug.nextValue());
+                List<Integer> bagOfNumbers = new ArrayList<>(numbersSet);
+                while ((numbers.size() < numberPerGame)
+                        && (bagOfNumbers.size() > 0)) {
+                    numbers.add(pickNumber(bagOfNumbers, rnd));
                 }
 
-                Integer[] numbersArray = asSortedList(numbers).toArray(new Integer[options[diffGamesCount].getNumberPerGame()]);
+                if (numbers.size() < numberPerGame) {
+                    throw new IllegalArgumentException("You have passed a invalid number per game parameter: " + numberPerGame); //TODO Criar uma exception para isso
+                }
+
+                Integer[] numbersArray = asSortedList(numbers).toArray(new Integer[numberPerGame]);
 
 
                 Game.Builder builder = new Game.Builder();
                 Game game = builder
-                        .setMinSize(options[diffGamesCount].getNumberPerGame())
+                        .setMinSize(numberPerGame)
                         .setNumberList(numbersArray)
                         .build();
 
@@ -89,6 +115,13 @@ public class LotteryQuickPick {
         System.out.println("Number of iterations: " + iterations);
 
         return games;
+    }
+
+    private Integer pickNumber(List<Integer> numbers, Random rnd) {
+        int index = rnd.nextInt(numbers.size());
+        Integer pickedNumber = numbers.get(index);
+        numbers.remove(index);
+        return pickedNumber;
     }
 
     public static <T extends Comparable<? super T>> List<T> asSortedList(Collection<T> c) {
